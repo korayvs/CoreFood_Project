@@ -1,0 +1,21 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "CategoryGet";
+    Layout = "~/Views/Shared/_CoreLayout.cshtml";
+}
+
+<h2>Category Update Page</h2>
+<br />
+
+@using (Html.BeginForm("CategoryUpdate", "Category", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.CategoryID)
+    <label>Category Name</label>
+    @Html.TextBoxFor(x => x.CategoryName, new { @class = "form-control" })
+    @* @Html.ValidationMessageFor(x => x.CategoryName, "", new { @style = "color:red" }) *@
+    <br />
+    <label>Description</label>
+    @Html.TextBoxFor(x => x.CategoryDescription, new { @class = "form-control" })
+    <br />
+    <button class="btn btn-info">Update</button>
+}
