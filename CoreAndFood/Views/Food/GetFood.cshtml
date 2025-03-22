@@ -1,0 +1,33 @@
+﻿@model Food
+@{
+    ViewData["Title"] = "GetFood";
+    Layout = "~/Views/Shared/_CoreLayout.cshtml";
+}
+
+<h2>Food Get Page</h2>
+<br />
+
+@using (Html.BeginForm("UpdateFood", "Food", FormMethod.Post))
+{
+    @Html.HiddenFor(x => x.FoodID)
+    <label>Food Name</label>
+    @Html.TextBoxFor(x => x.Name, new { @class = "form-control" })
+    <br />
+    <label>Price</label>
+    @Html.TextBoxFor(x => x.Price, new { @class = "form-control" })
+    <br />
+    <label>Stock</label>
+    @Html.TextBoxFor(x => x.Stock, new { @class = "form-control" })
+    <br />
+    <label>Image URL</label>
+    @Html.TextBoxFor(x => x.ImageUrl, new { @class = "form-control" })
+    <br />
+    <label>Category</label>
+    @* @Html.TextBoxFor(x => x.CategoryID, new { @class = "form-control" }) *@
+    @Html.DropDownListFor(x => x.CategoryID, (List<SelectListItem>)ViewBag.v1, new { @class = "form-control" })
+    <br />
+    <label>Description</label>
+    @Html.TextAreaFor(x => x.Description, 3, 1, new { @class = "form-control" })
+    <br />
+    <button class="btn btn-primary">Update</button>
+}

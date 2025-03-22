@@ -9,6 +9,7 @@ namespace CoreAndFood.Controllers
     {
         //Context c = new Context();
         FoodRepository foodRepository = new FoodRepository();
+        CategoryRepository categoryRepository = new CategoryRepository();
         public IActionResult Index()
         {
             return View(foodRepository.TList("Category"));
@@ -16,8 +17,6 @@ namespace CoreAndFood.Controllers
 
         public IActionResult AddFood()
         {
-            CategoryRepository categoryRepository = new CategoryRepository();
-
             List<SelectListItem> values = (from x in categoryRepository.TList()       //from x in c.Categories.ToList()
                                            select new SelectListItem
                                            {
@@ -38,6 +37,45 @@ namespace CoreAndFood.Controllers
         public IActionResult DeleteFood(int id)
         {
             foodRepository.TDelete(new Food { FoodID = id });
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult GetFood(int id)
+        {
+            List<SelectListItem> values = (from y in categoryRepository.TList()       //from x in c.Categories.ToList()
+                                           select new SelectListItem
+                                           {
+                                               Text = y.CategoryName,
+                                               Value = y.CategoryID.ToString()
+                                           }).ToList();
+            ViewBag.v1 = values;
+
+            var x = foodRepository.TGet(id);
+            Food f = new Food
+            {
+                FoodID = x.FoodID,
+                CategoryID = x.CategoryID,
+                Name = x.Name,
+                Price = x.Price,
+                Stock = x.Stock,
+                Description = x.Description,
+                ImageUrl = x.ImageUrl
+            };
+            return View(f);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateFood(Food p)
+        {
+            var x = foodRepository.TGet(p.FoodID);
+            x.Name = p.Name;
+            x.Price = p.Price;
+            x.Stock = p.Stock;
+            x.ImageUrl = p.ImageUrl;
+            x.Description = p.Description;
+            x.CategoryID = p.CategoryID;
+
+            foodRepository.TUpdate(x);
             return RedirectToAction("Index");
         }
     }
