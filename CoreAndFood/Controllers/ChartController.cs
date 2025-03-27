@@ -1,4 +1,5 @@
 ﻿using CoreAndFood.Models;
+using CoreAndFood.Repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreAndFood.Controllers
@@ -63,6 +64,34 @@ namespace CoreAndFood.Controllers
                 }).ToList();
             }
             return cs2;
+        }
+
+        public IActionResult Statistics()
+        {
+            FoodRepository f = new FoodRepository();
+            CategoryRepository c = new CategoryRepository(); 
+
+            var value1 = f.TList().Count();
+            ViewBag.v1 = value1;
+
+            var value2 = c.TList().Count();
+            ViewBag.v2 = value2;
+
+            var foid = c.TList().Where(x => x.CategoryName == "Fruit").Select(y => y.CategoryID).FirstOrDefault();
+            ViewBag.v = foid;
+            var value3 = f.TList().Where(x => x.CategoryID == foid).Count();
+            ViewBag.v3 = value3;
+
+            var value4 = f.TList().Where(x => x.CategoryID == c.TList().Where(z => z.CategoryName == "Vegetables").Select(y => y.CategoryID).FirstOrDefault()).Count();
+            ViewBag.v4 = value4;
+
+            var value5 = f.TList().Sum(x => x.Stock);
+            ViewBag.v5 = value5;
+
+            var value6 = f.TList().Where(x => x.CategoryID == c.TList().Where(y => y.CategoryName == "Legumes").Select(z => z.CategoryID).FirstOrDefault()).Count();
+            ViewBag.v6 = value6;
+
+            return View();
         }
     }
 }
