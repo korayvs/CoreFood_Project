@@ -1,9 +1,11 @@
 ﻿using CoreAndFood.Models;
 using CoreAndFood.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreAndFood.Controllers
 {
+    [AllowAnonymous]
     public class ChartController : Controller
     {
         public IActionResult Index()
@@ -41,7 +43,7 @@ namespace CoreAndFood.Controllers
             });
             return cs;
         }
-
+                
         public IActionResult Index3()
         {
             return View();
@@ -69,7 +71,7 @@ namespace CoreAndFood.Controllers
         public IActionResult Statistics()
         {
             FoodRepository f = new FoodRepository();
-            CategoryRepository c = new CategoryRepository(); 
+            CategoryRepository c = new CategoryRepository();
 
             var value1 = f.TList().Count();
             ViewBag.v1 = value1;
@@ -78,7 +80,7 @@ namespace CoreAndFood.Controllers
             ViewBag.v2 = value2;
 
             var foid = c.TList().Where(x => x.CategoryName == "Fruit").Select(y => y.CategoryID).FirstOrDefault();
-            ViewBag.v = foid;
+            //ViewBag.v = foid;
             var value3 = f.TList().Where(x => x.CategoryID == foid).Count();
             ViewBag.v3 = value3;
 
@@ -90,6 +92,27 @@ namespace CoreAndFood.Controllers
 
             var value6 = f.TList().Where(x => x.CategoryID == c.TList().Where(y => y.CategoryName == "Legumes").Select(z => z.CategoryID).FirstOrDefault()).Count();
             ViewBag.v6 = value6;
+
+            var value7 = f.TList().OrderByDescending(x => x.Stock).Select(y => y.Name).FirstOrDefault();
+            ViewBag.v7 = value7;
+
+            var value8 = f.TList().OrderBy(x => x.Stock).Select(y => y.Name).FirstOrDefault();
+            ViewBag.v8 = value8;
+
+            var value9 = f.TList().Average(x => x.Price).ToString("0.00");
+            ViewBag.v9 = value9;
+
+            var value10 = c.TList().Where(x => x.CategoryName == "Fruit").Select(y => y.CategoryID).FirstOrDefault();
+            var value10p = f.TList().Where(y => y.CategoryID == value10).Sum(x => x.Stock);
+            ViewBag.v10 = value10p;
+
+            var value11 = c.TList().Where(x => x.CategoryName == "Vegetables").Select(y => y.CategoryID).FirstOrDefault();
+            var value11p = f.TList().Where(y => y.CategoryID == value11).Sum(x => x.Stock);
+            ViewBag.v11 = value11p;
+
+            var value12 = f.TList().OrderByDescending(x => x.Price).Select(y => y.Name).FirstOrDefault();
+            ViewBag.v12 = value12;
+
 
             return View();
         }

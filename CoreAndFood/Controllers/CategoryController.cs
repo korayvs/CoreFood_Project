@@ -1,5 +1,6 @@
 ﻿using CoreAndFood.Models;
 using CoreAndFood.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoreAndFood.Controllers
@@ -7,6 +8,7 @@ namespace CoreAndFood.Controllers
     public class CategoryController : Controller
     {
         CategoryRepository categoryRepository = new CategoryRepository();
+        // [Authorize]
         public IActionResult Index()
         {
             return View(categoryRepository.TList());
