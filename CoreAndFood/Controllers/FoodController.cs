@@ -29,9 +29,25 @@ namespace CoreAndFood.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddFood(Food p)
+        public IActionResult AddFood(UrunEkle p)
         {
-            foodRepository.TAdd(p);
+            Food f = new Food();
+            if (p.ImageUrl != null)
+            {
+                var extension = Path.GetExtension(p.ImageUrl.FileName);
+                var newimagename = Guid.NewGuid() + extension;
+                var location = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/resimler/", newimagename);
+                var stream = new FileStream(location, FileMode.Create);
+                p.ImageUrl.CopyTo(stream);
+                f.ImageUrl = newimagename;
+            }
+            f.Name = p.Name;
+            f.Description = p.Description;
+            f.Price = p.Price;
+            f.Stock = p.Stock;
+            f.Price = p.Price;
+            f.CategoryID = p.CategoryID;
+            foodRepository.TAdd(f);
             return RedirectToAction("Index");
         }
 
